@@ -13,7 +13,7 @@ nuget pack Plugin.ImageCrop.nuspec
 * Xamarin.iOS (Unified)
 * Xamarin.Android
 
-### API Usage
+### Usage
 
 Use the CustomCameraView in your Android or iOS Project
 
