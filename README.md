@@ -1,6 +1,6 @@
-# ImageCrop Plugin for Xamarin
+# Custom Camera Plugin for Xamarin
 
-Custom camera for Xamarin.iOS and Xamarin.Android
+Custom Camera for Xamarin.iOS and Xamarin.Android
 
 #### Setup
 * Coming soon to NuGet
@@ -18,6 +18,7 @@ nuget pack Plugin.ImageCrop.nuspec
 Use the CustomCameraView in your Android or iOS Project
 
 **Custom Camera Android**
+
 See the test project for a working example.
 ```
 <plugin.customcamera.android.CustomCameraView
