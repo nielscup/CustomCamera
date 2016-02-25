@@ -7,5 +7,6 @@ namespace Plugin.CustomCamera.Abstractions
   /// </summary>
   public interface ICustomCamera
   {
+      ICustomCameraView CustomCameraView { get; }
   }
 }

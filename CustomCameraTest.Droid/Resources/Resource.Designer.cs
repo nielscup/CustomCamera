@@ -72,6 +72,12 @@ namespace CustomCameraTest.Droid
 			// aapt resource value: 0x7f050002
 			public const int frontCameraButton = 2131034114;
 			
+			// aapt resource value: 0x7f050004
+			public const int rotateLeftButton = 2131034116;
+			
+			// aapt resource value: 0x7f050005
+			public const int rotateRightButton = 2131034117;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

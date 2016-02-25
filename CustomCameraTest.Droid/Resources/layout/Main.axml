@@ -26,5 +26,15 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:text="Back" />
+        <Button
+            android:id="@+id/rotateLeftButton"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="Left" />
+        <Button
+            android:id="@+id/rotateRightButton"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:text="Right" />
     </LinearLayout>
 </FrameLayout>
