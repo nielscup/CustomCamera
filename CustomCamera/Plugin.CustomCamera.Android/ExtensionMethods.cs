@@ -11,6 +11,8 @@ using Android.Views;
 using Android.Widget;
 using Plugin.CustomCamera.Abstractions;
 using Android.Hardware;
+using Android.Graphics;
+using System.IO;
 
 namespace Plugin.CustomCamera
 {
@@ -62,6 +64,23 @@ namespace Plugin.CustomCamera
                 default:
                     return CameraOrientation.Rotation0;
             }
+        }
+
+        public static Bitmap ToBitmap(this byte[] bytes)
+        {
+            return BitmapFactory.DecodeByteArray(bytes, 0, bytes.Length);
+        }
+
+        public static byte[] ToBytes(this Bitmap bitmap)
+        {
+            byte[] bitmapData;
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Compress(Bitmap.CompressFormat.Jpeg, 100, stream);
+                bitmapData = stream.ToArray();
+            }
+
+            return bitmapData;
         }
     }
 }

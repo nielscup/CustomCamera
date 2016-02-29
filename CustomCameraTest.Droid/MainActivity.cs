@@ -15,6 +15,7 @@ namespace CustomCameraTest.Droid
     public class MainActivity : Activity
     {
         ICustomCameraView _customCameraView;
+        ImageView _imageView;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -24,6 +25,8 @@ namespace CustomCameraTest.Droid
             SetContentView(Resource.Layout.Main);
             _customCameraView = FindViewById<CustomCameraView>(Resource.Id.customCameraView);
             _customCameraView.StartCamera(CameraSelection.Front);
+
+            _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
             var captureButton = FindViewById<Button>(Resource.Id.captureButton);
             captureButton.Click += captureButton_Click;
@@ -96,7 +99,8 @@ namespace CustomCameraTest.Droid
 
         void ProcessPicture(string path)
         {
-
+            _imageView.SetImageURI(null);
+            _imageView.SetImageURI(Android.Net.Uri.Parse(path));
         }
     }
 }

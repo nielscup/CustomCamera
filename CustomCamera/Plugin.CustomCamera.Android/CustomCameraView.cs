@@ -12,18 +12,21 @@ using Android.Util;
 using Plugin.CustomCamera.Abstractions;
 using Android.Hardware;
 using Java.IO;
+using Android.Media;
+//using System.IO;
+//using Android.Graphics;
 
 namespace Plugin.CustomCamera
 {
     [Register("plugin.customcamera.android.CustomCameraView")]
-    public class CustomCameraView : 
-        FrameLayout, 
-        ICustomCameraView, 
-        TextureView.ISurfaceTextureListener, 
-        Camera.IPictureCallback, 
-        Camera.IPreviewCallback, 
-        Camera.IShutterCallback 
-        //ISurfaceHolderCallback
+    public class CustomCameraView :
+        FrameLayout,
+        ICustomCameraView,
+        TextureView.ISurfaceTextureListener,
+        Camera.IPictureCallback,
+        Camera.IPreviewCallback,
+        Camera.IShutterCallback
+    //ISurfaceHolderCallback
     {
         Camera _camera;
         Activity _activity;
@@ -33,8 +36,12 @@ namespace Plugin.CustomCamera
         int _h;
         string pictureName = "picture.jpg";
         bool _isCameraStarted = false;
-        
-        public CustomCameraView(Context context, IAttributeSet attrs): base(context, attrs)
+        //int _correctedRotation;
+        int _imageRotation;
+        int _cameraHardwareRotation;
+
+        public CustomCameraView(Context context, IAttributeSet attrs)
+            : base(context, attrs)
         {
             this._activity = (Activity)context;
 
@@ -47,7 +54,7 @@ namespace Plugin.CustomCamera
 
             var _textureView = new TextureView(context);
             _textureView.SurfaceTextureListener = this;
-            AddView(_textureView);            
+            AddView(_textureView);
 
             // make this view available in the PCL
             CustomCameraInstance.CustomCameraView = this;
@@ -62,17 +69,17 @@ namespace Plugin.CustomCamera
         /// <summary>
         /// The selected camera, front or back
         /// </summary>
-        public CameraSelection SelectedCamera 
+        public CameraSelection SelectedCamera
         {
             get
-            {                                
+            {
                 return _selectedCamera;
             }
             set
             {
                 if (_selectedCamera == value)
                     return;
-               
+
                 OpenCamera(value);
                 SetTexture(_surface, _w, _h);
             }
@@ -84,7 +91,7 @@ namespace Plugin.CustomCamera
         public CameraOrientation CameraOrientation
         {
             get
-            {                
+            {
                 return _cameraOrientation;
             }
             set
@@ -121,18 +128,15 @@ namespace Plugin.CustomCamera
         /// <param name="orientation">the camera orientation, default: Automatic</param>
         public void StartCamera(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = Abstractions.CameraOrientation.Automatic)
         {
-            //if (_isCameraStarted)
-            //    return;
-
             if (_cameraOrientation == CameraOrientation.None)
                 _cameraOrientation = orientation;
 
-            if(_selectedCamera == CameraSelection.None)
+            if (_selectedCamera == CameraSelection.None)
                 _selectedCamera = selectedCamera;
 
-            _isCameraStarted = true;    
-        
-            if(_surface != null)
+            _isCameraStarted = true;
+
+            if (_surface != null)
                 OpenCamera(_selectedCamera);
         }
 
@@ -144,7 +148,7 @@ namespace Plugin.CustomCamera
         {
             CloseCamera();
         }
-                   
+
         #endregion
 
         private void Callback(string path)
@@ -158,16 +162,14 @@ namespace Plugin.CustomCamera
         //https://forums.xamarin.com/discussion/17625/custom-camera-takepicture
         void Camera.IPictureCallback.OnPictureTaken(byte[] data, Android.Hardware.Camera camera)
         {
-            FileOutputStream outStream = null;
             File dataDir = Android.OS.Environment.ExternalStorageDirectory;
             if (data != null)
             {
                 try
                 {
                     var path = dataDir + "/" + pictureName;
-                    outStream = new FileOutputStream(path);
-                    outStream.Write(data);
-                    outStream.Close();
+                    //SaveFile(path, data);
+                    RotateBitmap(path, data);
                     Callback(path);
                 }
                 catch (FileNotFoundException e)
@@ -178,6 +180,145 @@ namespace Plugin.CustomCamera
                 {
                     System.Console.Out.WriteLine(ie.Message);
                 }
+            }
+        }
+
+        private void SaveFile(string path, byte[] data)
+        {
+            using (var outStream = new FileOutputStream(path))
+            {
+                outStream.Write(data);
+                outStream.Close();
+            }
+        }
+
+        void SetCameraOrientation()
+        {
+            // Google's camera orientation vs device orientation is all over the place, it changes per api version, per device type (phone/tablet) and per device brand
+            // Credits: http://stackoverflow.com/questions/4645960/how-to-set-android-camera-orientation-properly
+            if (_cameraInfo == null)
+                return;
+
+            Display display = _activity.WindowManager.DefaultDisplay;
+            //var displayRotation = display.Rotation;
+            int displayRotation = 0;
+
+            switch (display.Rotation)
+            {
+                case SurfaceOrientation.Rotation0:
+                    displayRotation = 0;
+                    break;
+                case SurfaceOrientation.Rotation90:
+                    displayRotation = 90;
+                    break;
+                case SurfaceOrientation.Rotation180:
+                    displayRotation = 180;
+                    break;
+                case SurfaceOrientation.Rotation270:
+                    displayRotation = 270;
+                    break;
+                default:
+                    break;
+            }
+            int correctedDisplayRotation;
+            
+            if (SelectedCamera == CameraSelection.Back)
+            {
+                _cameraHardwareRotation = MirrorOrientation(_cameraHardwareRotation); //(360 - _cameraHardwareRotation) % 360;
+            }
+
+            correctedDisplayRotation = (_cameraHardwareRotation + displayRotation) % 360;
+            correctedDisplayRotation = MirrorOrientation(correctedDisplayRotation); //(360 - correctedDisplayRotation) % 360;  // compensate the mirror
+
+            System.Console.WriteLine("displayRotation: {0}", displayRotation);
+            System.Console.WriteLine("_cameraInfo.Orientation: {0}", _cameraInfo.Orientation);
+            System.Console.WriteLine("_cameraHardwareOrientation: {0}", _cameraHardwareRotation);
+            System.Console.WriteLine("correctedRotation: {0}", correctedDisplayRotation);
+
+            _imageRotation = correctedDisplayRotation;
+
+            if (SelectedCamera == CameraSelection.Back)
+            {
+                _imageRotation = MirrorOrientation(_imageRotation);
+            }
+            
+            Android.Hardware.Camera.Parameters p = _camera.GetParameters();
+            
+            p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
+            p.SetRotation(0);
+            //p.SetRotation(_rotation);
+            //p.SetRotation((_cameraInfo.Orientation + degrees) % 360);
+            _camera.SetParameters(p);
+            //_camera.SetDisplayOrientation(_rotation);
+            _camera.SetDisplayOrientation(correctedDisplayRotation);
+
+        }
+
+        private int MirrorOrientation(int orientation)
+        {
+            return (360 - orientation) % 360;
+        }
+
+        /// <summary>
+        /// Rotate the picture taken
+        /// https://forums.xamarin.com/discussion/5409/photo-being-saved-in-landscape-not-portrait
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        void RotateBitmap(string path, byte[] data)
+        {
+            try
+            {
+                //using (Android.Graphics.Bitmap picture = Android.Graphics.BitmapFactory.DecodeFile(path))
+                using (Android.Graphics.Bitmap picture = data.ToBitmap())                
+                using (Android.Graphics.Matrix mtx = new Android.Graphics.Matrix())
+                {
+                    ExifInterface exif = new ExifInterface(path);
+                    string orientation = exif.GetAttribute(ExifInterface.TagOrientation);
+                    var camOrientation = int.Parse(orientation);
+                    
+                    switch (_imageRotation)
+                    {
+                        case 0: // landscape
+                            break;
+                        case 90: // landscape upside down
+                            mtx.PreRotate(270);
+                            break;
+                        case 180: // portrait
+                            mtx.PreRotate(180);
+                            break;
+                        case 270: // portrait upside down
+                            mtx.PreRotate(90);
+                            break;                        
+                    }
+
+                    var maxSize = 1024;
+                    double w = picture.Width;
+                    double h = picture.Height;
+                    if(picture.Width > maxSize || picture.Height > maxSize)
+                    {
+                        // set scaled width and height to prevent out of memory exception
+                        double scaleFactor = (double)maxSize / (double)picture.Width;
+                        if(picture.Height > picture.Width)
+                            scaleFactor = (double)maxSize / picture.Height;                        
+
+                        w = picture.Width * scaleFactor;
+                        h = picture.Height * scaleFactor;                        
+                    }
+
+                    using (var scaledPiture = Android.Graphics.Bitmap.CreateScaledBitmap(picture, (int)w, (int)h, false))
+                    using (var rotatedPiture = Android.Graphics.Bitmap.CreateBitmap(scaledPiture, 0, 0, (int)w, (int)h, mtx, false))
+                    {
+                        SaveFile(path, rotatedPiture.ToBytes());
+                    }
+                }
+            }
+            catch (Java.Lang.OutOfMemoryError e)
+            {
+                e.PrintStackTrace();
+                throw;
             }
         }
 
@@ -224,50 +365,6 @@ namespace Plugin.CustomCamera
                 //Console.WriteLine(ex.Message);
             }
         }
-        
-        public void SetCameraOrientation()
-        {
-            // Google's camera orientation vs device orientation is all over the place, it changes per api version, per device type (phone/tablet) and per device brand
-            // Credits: http://stackoverflow.com/questions/4645960/how-to-set-android-camera-orientation-properly
-            if (_cameraInfo == null)
-                return;
-
-            Display display = _activity.WindowManager.DefaultDisplay;
-            var rotation = display.Rotation;
-            int degrees = 0;
-
-            switch (rotation)
-	        {
-		        case SurfaceOrientation.Rotation0:
-                    degrees = 0;
-                    break;
-                    case SurfaceOrientation.Rotation90:
-                    degrees = 90;
-                    break;
-                case SurfaceOrientation.Rotation180:
-                    degrees = 180;
-                    break;
-                case SurfaceOrientation.Rotation270:
-                    degrees = 270;
-                    break;                
-                default:
-                    break;
-	        }
-            
-            int result;
-            if (SelectedCamera == CameraSelection.Front)
-            {
-                result = (_cameraInfo.Orientation + degrees) % 360;
-                result = (360 - result) % 360;  // compensate the mirror
-            }
-            else
-            {  // back-facing
-                result = (_cameraInfo.Orientation - degrees + 360) % 360;
-            }
-
-            _camera.SetDisplayOrientation(result);
-        }
-
 
         public void OnSurfaceTextureSizeChanged(Android.Graphics.SurfaceTexture surface, int width, int height)
         {
@@ -313,10 +410,13 @@ namespace Plugin.CustomCamera
                 {
                     try
                     {
-                        _camera = Camera.Open(camIdx);
                         
+                        _camera = Camera.Open(camIdx);
+                        _cameraHardwareRotation = _cameraInfo.Orientation;
+                        //_cameraInfo = new Camera.CameraInfo();
                         //Android.Hardware.Camera.Parameters p = _camera.GetParameters();
                         //p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
+                        //p.SetRotation(_rotation);
                         //_camera.SetParameters(p);
 
                         // SetPreviewCallback crashes when camera is released and called again
@@ -327,7 +427,7 @@ namespace Plugin.CustomCamera
                         _isCameraStarted = true;
                     }
                     catch (Exception e)
-                    {                        
+                    {
                         CloseCamera();
                         Log.Error("CustomCameraView OpenCamera", e.Message);
                     }
@@ -338,7 +438,7 @@ namespace Plugin.CustomCamera
         private void CloseCamera()
         {
             if (_camera != null)
-            {                
+            {
                 //_camera.Unlock();                
                 _camera.StopPreview();
                 //_camera.SetPreviewCallback(null);
@@ -347,6 +447,6 @@ namespace Plugin.CustomCamera
                 _camera = null;
                 _isCameraStarted = false;
             }
-        }                   
+        }
     }
 }
