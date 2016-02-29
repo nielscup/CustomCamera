@@ -60,8 +60,8 @@ namespace CustomCameraTest.Droid
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f050004
-			public const int backCameraButton = 2131034116;
+			// aapt resource value: 0x7f050005
+			public const int backCameraButton = 2131034117;
 			
 			// aapt resource value: 0x7f050002
 			public const int captureButton = 2131034114;
@@ -69,17 +69,20 @@ namespace CustomCameraTest.Droid
 			// aapt resource value: 0x7f050000
 			public const int customCameraView = 2131034112;
 			
-			// aapt resource value: 0x7f050003
-			public const int frontCameraButton = 2131034115;
+			// aapt resource value: 0x7f050004
+			public const int frontCameraButton = 2131034116;
 			
 			// aapt resource value: 0x7f050001
 			public const int imageView = 2131034113;
 			
-			// aapt resource value: 0x7f050005
-			public const int rotateLeftButton = 2131034117;
+			// aapt resource value: 0x7f050003
+			public const int resetCameraButton = 2131034115;
 			
 			// aapt resource value: 0x7f050006
-			public const int rotateRightButton = 2131034118;
+			public const int rotateLeftButton = 2131034118;
+			
+			// aapt resource value: 0x7f050007
+			public const int rotateRightButton = 2131034119;
 			
 			static Id()
 			{

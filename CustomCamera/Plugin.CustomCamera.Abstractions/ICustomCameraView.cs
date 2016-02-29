@@ -29,12 +29,18 @@ namespace Plugin.CustomCamera.Abstractions
         /// </summary>
         /// <param name="selectedCamera">The selected camera, default: Back</param>
         /// <param name="orientation">the camera orientation, default: Automatic</param>
-        void StartCamera(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = CameraOrientation.Automatic);
+        void Start(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = CameraOrientation.Automatic);
 
         /// <summary>
         /// Stops the camera
         /// </summary>
         /// <param name="callback"></param>
-        void StopCamera();
+        void Stop();
+
+        /// <summary>
+        /// Call this method this to reset the camera after taking a picture
+        /// </summary>
+        /// <param name="callback"></param>
+        void Reset();
     }
 }

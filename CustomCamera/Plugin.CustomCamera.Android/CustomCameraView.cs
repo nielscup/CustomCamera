@@ -13,8 +13,6 @@ using Plugin.CustomCamera.Abstractions;
 using Android.Hardware;
 using Java.IO;
 using Android.Media;
-//using System.IO;
-//using Android.Graphics;
 
 namespace Plugin.CustomCamera
 {
@@ -26,7 +24,6 @@ namespace Plugin.CustomCamera
         Camera.IPictureCallback,
         Camera.IPreviewCallback,
         Camera.IShutterCallback
-    //ISurfaceHolderCallback
     {
         Camera _camera;
         Activity _activity;
@@ -36,7 +33,6 @@ namespace Plugin.CustomCamera
         int _h;
         string pictureName = "picture.jpg";
         bool _isCameraStarted = false;
-        //int _correctedRotation;
         int _imageRotation;
         int _cameraHardwareRotation;
 
@@ -81,7 +77,7 @@ namespace Plugin.CustomCamera
                     return;
 
                 OpenCamera(value);
-                SetTexture(_surface, _w, _h);
+                SetTexture();
             }
         }
 
@@ -126,7 +122,7 @@ namespace Plugin.CustomCamera
         /// </summary>
         /// <param name="selectedCamera">The selected camera, default: Back</param>
         /// <param name="orientation">the camera orientation, default: Automatic</param>
-        public void StartCamera(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = Abstractions.CameraOrientation.Automatic)
+        public void Start(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = Abstractions.CameraOrientation.Automatic)
         {
             if (_cameraOrientation == CameraOrientation.None)
                 _cameraOrientation = orientation;
@@ -144,9 +140,18 @@ namespace Plugin.CustomCamera
         /// Stops the camera
         /// </summary>
         /// <param name="callback"></param>
-        public void StopCamera()
+        public void Stop()
         {
             CloseCamera();
+        }
+
+        /// <summary>
+        /// Call this method this to reset the camera after taking a picture
+        /// </summary>
+        /// <param name="callback"></param>
+        public void Reset()
+        {
+            SetTexture();
         }
 
         #endregion
@@ -340,24 +345,24 @@ namespace Plugin.CustomCamera
                 return;
 
             OpenCamera(_selectedCamera);
-            SetTexture(_surface, _w, _h);
+            SetTexture();
         }
 
-        private void SetTexture(Android.Graphics.SurfaceTexture surface, int w, int h)
+        private void SetTexture()
         {
-            if (_camera == null)
+            if (_camera == null || _surface == null)
                 return;
 
             SetCameraOrientation();
 
-            this.LayoutParameters.Width = w;
-            this.LayoutParameters.Height = h;
+            this.LayoutParameters.Width = _w;
+            this.LayoutParameters.Height = _h;
 
             try
             {
                 //_camera.SetPreviewCallback(this);
                 //_camera.Lock();
-                _camera.SetPreviewTexture(surface);
+                _camera.SetPreviewTexture(_surface);
                 _camera.StartPreview();
             }
             catch (Java.IO.IOException ex)
@@ -413,15 +418,6 @@ namespace Plugin.CustomCamera
                         
                         _camera = Camera.Open(camIdx);
                         _cameraHardwareRotation = _cameraInfo.Orientation;
-                        //_cameraInfo = new Camera.CameraInfo();
-                        //Android.Hardware.Camera.Parameters p = _camera.GetParameters();
-                        //p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
-                        //p.SetRotation(_rotation);
-                        //_camera.SetParameters(p);
-
-                        // SetPreviewCallback crashes when camera is released and called again
-                        //_camera.SetPreviewCallback(this);
-                        //_camera.Lock();
 
                         _selectedCamera = cameraSelection;
                         _isCameraStarted = true;

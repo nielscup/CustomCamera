@@ -24,7 +24,7 @@ namespace CustomCameraTest.Droid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             _customCameraView = FindViewById<CustomCameraView>(Resource.Id.customCameraView);
-            _customCameraView.StartCamera(CameraSelection.Front);
+            _customCameraView.Start(CameraSelection.Front);
 
             _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
@@ -42,6 +42,14 @@ namespace CustomCameraTest.Droid
 
             var rotateRightButton = FindViewById<Button>(Resource.Id.rotateRightButton);
             rotateRightButton.Click += rotateRightButton_Click;
+
+            var resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
+            resetCameraButton.Click += resetCameraButton_Click;
+        }
+
+        void resetCameraButton_Click(object sender, EventArgs e)
+        {
+            _customCameraView.Reset();
         }
 
         void rotateLeftButton_Click(object sender, EventArgs e)

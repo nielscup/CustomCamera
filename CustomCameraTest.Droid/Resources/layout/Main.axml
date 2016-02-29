@@ -23,6 +23,11 @@
             android:layout_height="match_parent"
             android:text="Capture" />
         <Button
+            android:id="@+id/resetCameraButton"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:text="Reset" />
+        <Button
             android:id="@+id/frontCameraButton"
             android:layout_width="60dp"
             android:layout_height="match_parent"
