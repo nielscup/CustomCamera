@@ -1,16 +1,16 @@
 # Custom Camera Plugin for Xamarin
 
-Custom Camera for Xamarin.iOS and Xamarin.Android. This plugin will let you add a custom camera view to your Xamarin project. Easily select either front or rear facing camera from within your code. 
+Custom Camera for Xamarin.iOS and Xamarin.Android. This plugin will let you add a custom camera view to your Xamarin project. Easily select either front or rear facing camera from within your code. Custom Camera currently only supports taking pictures (no video).
 
 #### Setup
 * Coming soon to NuGet
-* Or run the following command to create a nuget package:
+* Or run the following command to create a nuget package yourself:
 ```
 nuget pack Plugin.ImageCrop.nuspec
 ```
 
 **Supports**
-* Xamarin.iOS (Unified)
+* Xamarin.iOS (Unified) WORK IN PROGRESS
 * Xamarin.Android
 
 ### Usage
