@@ -165,7 +165,7 @@ namespace Plugin.CustomCamera
             }
         }
 
-        private void Callback(string path)
+        void Callback(string path)
         {
             var cb = _callback;
             _callback = null;
