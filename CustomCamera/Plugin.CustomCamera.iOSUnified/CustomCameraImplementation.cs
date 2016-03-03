@@ -8,6 +8,11 @@ namespace Plugin.CustomCamera
     /// </summary>
     public class CustomCameraImplementation : ICustomCamera
     {
+        internal CustomCameraImplementation()
+        {
+            CustomCameraInstance.CustomCameraView = new CustomCameraView();
+        }
+
         /// <summary>
         /// Instance of the Custom Camera View
         /// </summary>
@@ -19,6 +24,17 @@ namespace Plugin.CustomCamera
 
     internal static class CustomCameraInstance
     {
-        internal static ICustomCameraView CustomCameraView { get; set; }
+        static ICustomCameraView _customCameraView;
+        internal static ICustomCameraView CustomCameraView 
+        { 
+            get
+            {
+                return _customCameraView;
+            }
+            set
+            {
+                _customCameraView = value;
+            }
+        }
     }
 }

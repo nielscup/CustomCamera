@@ -39,6 +39,8 @@
       <Link>CrossCustomCamera.cs</Link>
     </Compile>
     <Compile Include="CustomCameraImplementation.cs" />
+    <Compile Include="CustomCameraView.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
