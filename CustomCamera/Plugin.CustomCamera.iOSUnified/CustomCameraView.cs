@@ -56,14 +56,14 @@ namespace Plugin.CustomCamera
         /// Starts the camera
         /// </summary>
         /// <param name="selectedCamera">The selected camera, default: Back</param>
-        /// <param name="orientation">the camera orientation, default: Automatic</param>
-        public void Start(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = CameraOrientation.Automatic)
+        public void Start(CameraSelection selectedCamera = CameraSelection.Back)
         {
             try
             {
                 SetupUserInterface();
-                SetupEventHandlers();
+                //SetupEventHandlers();                
                 SetupLiveCameraStream();
+                SetSelectedCamera(selectedCamera);
                 AuthorizeCameraUse();
             }
             catch (Exception ex)
@@ -75,16 +75,14 @@ namespace Plugin.CustomCamera
         /// <summary>
         /// Stops the camera
         /// </summary>
-        /// <param name="callback"></param>
         public void Stop()
         {
-            throw new NotImplementedException();
+            // Do nothing
         }
 
         /// <summary>
         /// Call this method this to reset the camera after taking a picture
         /// </summary>
-        /// <param name="callback"></param>
         public void Reset()
         {
             SetPicture(false);

@@ -121,11 +121,12 @@ namespace Plugin.CustomCamera
         /// Starts the camera
         /// </summary>
         /// <param name="selectedCamera">The selected camera, default: Back</param>
-        /// <param name="orientation">the camera orientation, default: Automatic</param>
-        public void Start(CameraSelection selectedCamera = CameraSelection.Back, CameraOrientation orientation = Abstractions.CameraOrientation.Automatic)
+        public void Start(CameraSelection selectedCamera = CameraSelection.Back)
         {
-            if (_cameraOrientation == CameraOrientation.None)
-                _cameraOrientation = orientation;
+            //if (_cameraOrientation == CameraOrientation.None)
+            //    _cameraOrientation = orientation;
+
+            _cameraOrientation = Abstractions.CameraOrientation.Automatic;
 
             if (_selectedCamera == CameraSelection.None)
                 _selectedCamera = selectedCamera;

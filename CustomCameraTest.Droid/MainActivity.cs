@@ -92,7 +92,8 @@ namespace CustomCameraTest.Droid
 
         void captureButton_Click(object sender, EventArgs e)
         {
-            _customCameraView.TakePicture((path) => ProcessPicture(path));
+            CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));
+            //_customCameraView.TakePicture((path) => ProcessPicture(path));
         }
 
         void backCameraButton_Click(object sender, EventArgs e)

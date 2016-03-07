@@ -12,10 +12,10 @@ namespace Plugin.CustomCamera
     /// </summary>
     public class CustomCameraImplementation : ICustomCamera
     {
-        internal CustomCameraImplementation()
-        {
-            CustomCameraInstance.CustomCameraView = new CustomCameraView(Application.Context, null);
-        }
+        //internal CustomCameraImplementation()
+        //{
+        //    CustomCameraInstance.CustomCameraView = new CustomCameraView(Application.Context, null);
+        //}
 
         /// <summary>
         /// Instance of the Custom Camera View
