@@ -113,6 +113,7 @@ namespace Plugin.CustomCamera
 
             Android.Hardware.Camera.Parameters p = _camera.GetParameters();
             p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
+            var size = p.PreviewSize;
             _camera.SetParameters(p);
             _camera.TakePicture(this, this, this);
         }
@@ -339,6 +340,15 @@ namespace Plugin.CustomCamera
             _w = w;
             _h = h;
 
+            if(w > h)
+            {
+                _w = h;
+            }
+            if(h> w)
+            {
+                _h = w;
+            }
+
             if (!_isCameraStarted)
                 return;
 
@@ -355,7 +365,7 @@ namespace Plugin.CustomCamera
 
             this.LayoutParameters.Width = _w;
             this.LayoutParameters.Height = _h;
-
+            
             try
             {
                 //_camera.SetPreviewCallback(this);
@@ -415,8 +425,9 @@ namespace Plugin.CustomCamera
                     {
                         
                         _camera = Camera.Open(camIdx);
+                        //var size = new Camera.Size(_camera, 300, 300);
                         _cameraHardwareRotation = _cameraInfo.Orientation;
-
+                        
                         _selectedCamera = cameraSelection;
                         _isCameraStarted = true;
                     }
@@ -428,6 +439,13 @@ namespace Plugin.CustomCamera
                 }
             }
         }
+
+        //private void GetSize()
+        //{
+        //    var p = _camera.GetParameters();
+        //    p.PreviewSize
+        //    List<Size> sizes = camera_parameters.getSupportedPreviewSizes();
+        //}
 
         private void CloseCamera()
         {
