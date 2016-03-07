@@ -24,7 +24,7 @@
             android:text="Capture" />
         <Button
             android:id="@+id/resetCameraButton"
-            android:layout_width="60dp"
+            android:layout_width="90dp"
             android:layout_height="match_parent"
             android:text="Reset" />
         <Button
@@ -37,7 +37,7 @@
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:text="Back" />
-        <Button
+    <!--<Button
             android:id="@+id/rotateLeftButton"
             android:layout_width="60dp"
             android:layout_height="match_parent"
@@ -46,6 +46,6 @@
             android:id="@+id/rotateRightButton"
             android:layout_width="60dp"
             android:layout_height="match_parent"
-            android:text="Right" />
+            android:text="Right" />-->
     </LinearLayout>
 </FrameLayout>

@@ -16,7 +16,8 @@ namespace CustomCameraTest.Droid
     {
         ICustomCameraView _customCameraView;
         ImageView _imageView;
-
+        Button captureButton;
+        Button resetCameraButton;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -28,7 +29,7 @@ namespace CustomCameraTest.Droid
 
             _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
-            var captureButton = FindViewById<Button>(Resource.Id.captureButton);
+            captureButton = FindViewById<Button>(Resource.Id.captureButton);
             captureButton.Click += captureButton_Click;
 
             var frontCameraButton = FindViewById<Button>(Resource.Id.frontCameraButton);
@@ -37,19 +38,20 @@ namespace CustomCameraTest.Droid
             var backCameraButton = FindViewById<Button>(Resource.Id.backCameraButton);
             backCameraButton.Click += backCameraButton_Click;
 
-            var rotateLeftButton = FindViewById<Button>(Resource.Id.rotateLeftButton);
-            rotateLeftButton.Click += rotateLeftButton_Click;
+            //var rotateLeftButton = FindViewById<Button>(Resource.Id.rotateLeftButton);
+            //rotateLeftButton.Click += rotateLeftButton_Click;
 
-            var rotateRightButton = FindViewById<Button>(Resource.Id.rotateRightButton);
-            rotateRightButton.Click += rotateRightButton_Click;
+            //var rotateRightButton = FindViewById<Button>(Resource.Id.rotateRightButton);
+            //rotateRightButton.Click += rotateRightButton_Click;
 
-            var resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
+            resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
             resetCameraButton.Click += resetCameraButton_Click;
         }
 
         void resetCameraButton_Click(object sender, EventArgs e)
         {
-            _customCameraView.Reset();
+            CrossCustomCamera.Current.CustomCameraView.Reset();
+            //_customCameraView.Reset();
         }
 
         void rotateLeftButton_Click(object sender, EventArgs e)
@@ -92,7 +94,7 @@ namespace CustomCameraTest.Droid
 
         void captureButton_Click(object sender, EventArgs e)
         {
-            CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));
+            CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));            
             //_customCameraView.TakePicture((path) => ProcessPicture(path));
         }
 

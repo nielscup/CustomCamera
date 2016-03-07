@@ -227,19 +227,19 @@ namespace Plugin.CustomCamera
                     break;
             }
             int correctedDisplayRotation;
-            
+            var camHardwareRotation = _cameraHardwareRotation;
             if (SelectedCamera == CameraSelection.Back)
             {
-                _cameraHardwareRotation = MirrorOrientation(_cameraHardwareRotation); //(360 - _cameraHardwareRotation) % 360;
+                camHardwareRotation = MirrorOrientation(_cameraHardwareRotation);
             }
 
-            correctedDisplayRotation = (_cameraHardwareRotation + displayRotation) % 360;
-            correctedDisplayRotation = MirrorOrientation(correctedDisplayRotation); //(360 - correctedDisplayRotation) % 360;  // compensate the mirror
+            correctedDisplayRotation = (camHardwareRotation + displayRotation) % 360;
+            correctedDisplayRotation = MirrorOrientation(correctedDisplayRotation); // compensate the mirror
 
-            System.Console.WriteLine("displayRotation: {0}", displayRotation);
-            System.Console.WriteLine("_cameraInfo.Orientation: {0}", _cameraInfo.Orientation);
-            System.Console.WriteLine("_cameraHardwareOrientation: {0}", _cameraHardwareRotation);
-            System.Console.WriteLine("correctedRotation: {0}", correctedDisplayRotation);
+            //System.Console.WriteLine("displayRotation: {0}", displayRotation);
+            //System.Console.WriteLine("_cameraInfo.Orientation: {0}", _cameraInfo.Orientation);
+            //System.Console.WriteLine("_cameraHardwareOrientation: {0}", camHardwareRotation);
+            //System.Console.WriteLine("correctedRotation: {0}", correctedDisplayRotation);
 
             _imageRotation = correctedDisplayRotation;
 
@@ -251,11 +251,8 @@ namespace Plugin.CustomCamera
             Android.Hardware.Camera.Parameters p = _camera.GetParameters();
             
             p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
-            p.SetRotation(0);
-            //p.SetRotation(_rotation);
-            //p.SetRotation((_cameraInfo.Orientation + degrees) % 360);
+            //p.SetRotation(0);
             _camera.SetParameters(p);
-            //_camera.SetDisplayOrientation(_rotation);
             _camera.SetDisplayOrientation(correctedDisplayRotation);
 
         }
