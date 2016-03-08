@@ -14,7 +14,7 @@ namespace Plugin.CustomCamera
     {        
         #region ICustomCameraView interface implementation
 
-        CameraOrientation _cameraOrientation = CameraOrientation.Automatic;
+        //CameraOrientation _cameraOrientation = CameraOrientation.Automatic;
         static CameraSelection _selectedCamera;
         Action<string> _callback;
 
