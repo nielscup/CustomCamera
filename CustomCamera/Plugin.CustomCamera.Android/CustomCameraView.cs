@@ -113,7 +113,7 @@ namespace Plugin.CustomCamera
 
             Android.Hardware.Camera.Parameters p = _camera.GetParameters();
             p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
-            var size = p.PreviewSize;
+            //var size = p.PreviewSize;
             _camera.SetParameters(p);
             _camera.TakePicture(this, this, this);
         }
@@ -236,12 +236,7 @@ namespace Plugin.CustomCamera
 
             correctedDisplayRotation = (camHardwareRotation + displayRotation) % 360;
             correctedDisplayRotation = MirrorOrientation(correctedDisplayRotation); // compensate the mirror
-
-            //System.Console.WriteLine("displayRotation: {0}", displayRotation);
-            //System.Console.WriteLine("_cameraInfo.Orientation: {0}", _cameraInfo.Orientation);
-            //System.Console.WriteLine("_cameraHardwareOrientation: {0}", camHardwareRotation);
-            //System.Console.WriteLine("correctedRotation: {0}", correctedDisplayRotation);
-
+            
             _imageRotation = correctedDisplayRotation;
 
             if (SelectedCamera == CameraSelection.Back)
@@ -256,6 +251,43 @@ namespace Plugin.CustomCamera
             _camera.SetParameters(p);
             _camera.SetDisplayOrientation(correctedDisplayRotation);
 
+            // set dimensions:
+            double aspectRatio = (double)p.PreviewSize.Height / (double)p.PreviewSize.Width;
+
+            if ((int)(_h * aspectRatio) < _w)
+            {
+                _h = (int)(_w * aspectRatio);
+            }
+            else
+            {
+                _w = (int)(_h * aspectRatio);
+            }
+
+            if (correctedDisplayRotation == 90 || correctedDisplayRotation == 270)
+            {
+                var w = _w;
+                // portrait                
+                _w = (int)(_h * aspectRatio);
+                CorrectDimensions(w, _w);                
+            }
+            else
+            {
+                var h = _h;
+                // landscape
+                _h = (int)(_w * aspectRatio);
+                CorrectDimensions(h, _h);     
+            }
+        }
+
+        private void CorrectDimensions(int fullSize, int scaledSize)
+        {
+            if (scaledSize < fullSize)
+            {
+                // make sure the camera fills the requested area
+                double factor = (double)fullSize / (double)scaledSize;
+                _w = (int)(_w * factor);
+                _h = (int)(_h * factor);
+            }
         }
 
         private int MirrorOrientation(int orientation)
@@ -339,16 +371,7 @@ namespace Plugin.CustomCamera
             _surface = surface;
             _w = w;
             _h = h;
-
-            if(w > h)
-            {
-                _w = h;
-            }
-            if(h> w)
-            {
-                _h = w;
-            }
-
+                        
             if (!_isCameraStarted)
                 return;
 
@@ -425,7 +448,7 @@ namespace Plugin.CustomCamera
                     {
                         
                         _camera = Camera.Open(camIdx);
-                        //var size = new Camera.Size(_camera, 300, 300);
+                        //var size = new Camera.Size(_camera, 300, 300);                                                
                         _cameraHardwareRotation = _cameraInfo.Orientation;
                         
                         _selectedCamera = cameraSelection;
