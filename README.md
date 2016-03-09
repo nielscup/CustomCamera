@@ -25,7 +25,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 	android:layout_height="match_parent" />
 ```
 
-**Custom Camera iOS**
+**iOS**
 ```
 public override void ViewDidLoad()
 {
