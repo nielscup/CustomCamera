@@ -12,7 +12,7 @@ using System.Linq;
 namespace Plugin.CustomCamera
 {
     public class CustomCameraView : UIImageView, ICustomCameraView
-    {        
+    {
         #region ICustomCameraView interface implementation
 
         CameraOrientation _cameraOrientation = CameraOrientation.Automatic;
@@ -106,14 +106,14 @@ namespace Plugin.CustomCamera
             SetPicture(false);
         }
         #endregion
-                
+
         AVCaptureSession _captureSession;
         AVCaptureDeviceInput _captureDeviceInput;
         AVCaptureStillImageOutput _stillImageOutput;
         UIView _liveCameraStream;
         AVCaptureVideoPreviewLayer _videoPreviewLayer;
         bool _resetCamera = false;
-                
+
         void SetupUserInterface()
         {
             if (_liveCameraStream == null)
@@ -124,9 +124,9 @@ namespace Plugin.CustomCamera
             else
             {
                 _liveCameraStream.Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height);
-            }            
+            }
         }
-                
+
         async void TakePicture()
         {
             if (_resetCamera)
@@ -146,7 +146,7 @@ namespace Plugin.CustomCamera
             if (imgData.Save(destinationPath, false, out err))
             {
                 Console.WriteLine("saved as " + destinationPath);
-                Callback(destinationPath);                
+                Callback(destinationPath);
             }
             else
             {
@@ -173,10 +173,10 @@ namespace Plugin.CustomCamera
         {
             if (selectedCamera.ToAVCaptureDevicePosition() == _captureDeviceInput.Device.Position)
                 return;
-            
+
             var device = GetCamera(selectedCamera.ToAVCaptureDevicePosition());
 
-            
+
             ConfigureCameraForDevice(device);
 
             _captureSession.BeginConfiguration();
@@ -197,15 +197,13 @@ namespace Plugin.CustomCamera
                 {
                     device.LockForConfiguration(out error);
                     device.FlashMode = AVCaptureFlashMode.Off;
-                    device.UnlockForConfiguration();
-                    //_toggleFlashButton.SetBackgroundImage(UIImage.FromFile("NoFlashButton.png"), UIControlState.Normal);
+                    device.UnlockForConfiguration();;
                 }
                 else
                 {
                     device.LockForConfiguration(out error);
                     device.FlashMode = AVCaptureFlashMode.On;
                     device.UnlockForConfiguration();
-                    //_toggleFlashButton.SetBackgroundImage(UIImage.FromFile("FlashButton.png"), UIControlState.Normal);
                 }
             }
         }
@@ -225,7 +223,7 @@ namespace Plugin.CustomCamera
         }
 
         void SetupLiveCameraStream()
-        {            
+        {
             _captureSession = new AVCaptureSession();
 
             var viewLayer = _liveCameraStream.Layer;
@@ -234,23 +232,23 @@ namespace Plugin.CustomCamera
                 Frame = _liveCameraStream.Bounds
             };
             _liveCameraStream.Layer.AddSublayer(_videoPreviewLayer);
-            
-            var captureDevice = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);            
-            ConfigureCameraForDevice(captureDevice);            
+
+            var captureDevice = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);
+            ConfigureCameraForDevice(captureDevice);
             _captureDeviceInput = AVCaptureDeviceInput.FromDevice(captureDevice);
-            
+
             //var dictionary = new NSMutableDictionary();
             //dictionary[AVVideo.CodecKey] = new NSNumber((int)AVVideoCodec.JPEG);
-                       
-            
+
+
             _stillImageOutput = new AVCaptureStillImageOutput()
             {
-                OutputSettings = new NSDictionary()                
+                OutputSettings = new NSDictionary()
             };
-            
+
             _captureSession.AddOutput(_stillImageOutput);
-            _captureSession.AddInput(_captureDeviceInput); 
-            _captureSession.StartRunning();            
+            _captureSession.AddInput(_captureDeviceInput);
+            _captureSession.StartRunning();
         }
 
         void LOG()
@@ -271,7 +269,7 @@ namespace Plugin.CustomCamera
                 _videoPreviewLayer.Orientation = _cameraOrientation.ToAVCaptureVideoOrientation();
 
                 _videoPreviewLayer.Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height);
-                _liveCameraStream.Frame = _videoPreviewLayer.Frame;                
+                _liveCameraStream.Frame = _videoPreviewLayer.Frame;
             }
         }
 

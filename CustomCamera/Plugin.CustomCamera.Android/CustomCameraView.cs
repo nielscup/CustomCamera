@@ -36,8 +36,7 @@ namespace Plugin.CustomCamera
         int _imageRotation;
         int _cameraHardwareRotation;
 
-        public CustomCameraView(Context context, IAttributeSet attrs)
-            : base(context, attrs)
+        public CustomCameraView(Context context, IAttributeSet attrs): base(context, attrs)
         {
             this._activity = (Activity)context;
 
@@ -132,10 +131,7 @@ namespace Plugin.CustomCamera
             _isCameraStarted = true;
 
             if (_surface != null)
-            {
                 OpenCamera(_selectedCamera);
-                SetTexture();
-            }
         }
 
         /// <summary>
@@ -446,7 +442,8 @@ namespace Plugin.CustomCamera
                     try
                     {
                         
-                        _camera = Camera.Open(camIdx);                                               
+                        _camera = Camera.Open(camIdx);
+                        //var size = new Camera.Size(_camera, 300, 300);                                                
                         _cameraHardwareRotation = _cameraInfo.Orientation;
                         
                         _selectedCamera = cameraSelection;
@@ -460,6 +457,13 @@ namespace Plugin.CustomCamera
                 }
             }
         }
+
+        //private void GetSize()
+        //{
+        //    var p = _camera.GetParameters();
+        //    p.PreviewSize
+        //    List<Size> sizes = camera_parameters.getSupportedPreviewSizes();
+        //}
 
         private void CloseCamera()
         {

@@ -15,16 +15,14 @@ namespace CustomCameraTest.Droid
     public class MainActivity : Activity
     {
         ImageView _imageView;
-
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-          
             CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
-            
+
             _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
             var captureButton = FindViewById<Button>(Resource.Id.captureButton);
@@ -50,9 +48,9 @@ namespace CustomCameraTest.Droid
         {
             CrossCustomCamera.Current.CustomCameraView.Reset();
         }
-
+                
         void captureButton_Click(object sender, EventArgs e)
-        {            
+        {
             CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));
         }
 
@@ -74,38 +72,38 @@ namespace CustomCameraTest.Droid
 
         //void rotateLeftButton_Click(object sender, EventArgs e)
         //{
-        //    switch (_customCameraView.CameraOrientation)
+        //    switch (CrossCustomCamera.Current.CustomCameraView.CameraOrientation)
         //    {
         //        case CameraOrientation.Rotation0:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation270;
         //            break;
         //        case CameraOrientation.Rotation90:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation0;
         //            break;
         //        case CameraOrientation.Rotation180:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation90;
         //            break;
         //        case CameraOrientation.Rotation270:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation180;
         //            break;
         //    }
         //}
 
         //void rotateRightButton_Click(object sender, EventArgs e)
         //{
-        //    switch (_customCameraView.CameraOrientation)
+        //    switch (CrossCustomCamera.Current.CustomCameraView.CameraOrientation)
         //    {
         //        case CameraOrientation.Rotation0:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation90;
         //            break;
         //        case CameraOrientation.Rotation90:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation180;
         //            break;
         //        case CameraOrientation.Rotation180:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation270;
         //            break;
         //        case CameraOrientation.Rotation270:
-        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
+        //            CrossCustomCamera.Current.CustomCameraView.CameraOrientation = CameraOrientation.Rotation0;
         //            break;
         //    }
         //}
