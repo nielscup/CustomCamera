@@ -15,7 +15,6 @@ namespace CustomCameraTest.iOS
         const int defaultSize = 300;
         UIImageView _previewImage;
         UIButton _captureButton;
-        UIView _customCameraView;
         const string ResetCamera = "Reset";
 
         public ViewController(IntPtr handle): base(handle){ }
@@ -26,9 +25,8 @@ namespace CustomCameraTest.iOS
             // Perform any additional setup after loading the view, typically from a nib.
             
             // CustomCamera Plugin EXAMPLE
-            _customCameraView = (UIView)CrossCustomCamera.Current.CustomCameraView;
-            _customCameraView.Frame = View.Frame;
-            Add(_customCameraView);
+            ((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = View.Frame;
+            Add((UIView)CrossCustomCamera.Current.CustomCameraView);
             CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
 
             yPos = 40;//(int)View.Bounds.Height - 60;
@@ -68,10 +66,7 @@ namespace CustomCameraTest.iOS
         {
             base.DidRotate(fromInterfaceOrientation);
 
-            if (_customCameraView == null)
-                return;
-            
-            _customCameraView.Frame = View.Frame;
+            ((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = View.Frame;
             CrossCustomCamera.Current.CustomCameraView.CameraOrientation = this.InterfaceOrientation.ToCameraOrientation();                    
         }
 

@@ -14,9 +14,7 @@ namespace CustomCameraTest.Droid
     [Activity(Label = "CustomCameraTest.Droid", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        ICustomCameraView _customCameraView;
         ImageView _imageView;
-        //CameraSelection selectedCamera = CameraSelection.Front;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -24,11 +22,9 @@ namespace CustomCameraTest.Droid
 
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
-            _customCameraView = FindViewById<CustomCameraView>(Resource.Id.customCameraView);
-            
-            //selectedCamera = CrossCustomCamera.Current.CustomCameraView.SelectedCamera;
+          
             CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
-
+            
             _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
             var captureButton = FindViewById<Button>(Resource.Id.captureButton);
@@ -39,42 +35,34 @@ namespace CustomCameraTest.Droid
 
             var backCameraButton = FindViewById<Button>(Resource.Id.backCameraButton);
             backCameraButton.Click += backCameraButton_Click;
+                        
+            var resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
+            resetCameraButton.Click += resetCameraButton_Click;
 
             //var rotateLeftButton = FindViewById<Button>(Resource.Id.rotateLeftButton);
             //rotateLeftButton.Click += rotateLeftButton_Click;
 
             //var rotateRightButton = FindViewById<Button>(Resource.Id.rotateRightButton);
             //rotateRightButton.Click += rotateRightButton_Click;
-
-            var resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
-            resetCameraButton.Click += resetCameraButton_Click;
         }
 
         void resetCameraButton_Click(object sender, EventArgs e)
         {
             CrossCustomCamera.Current.CustomCameraView.Reset();
-            //_customCameraView.Reset();
         }
 
         void captureButton_Click(object sender, EventArgs e)
         {            
-            CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));            
-            //_customCameraView.TakePicture((path) => ProcessPicture(path));
+            CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));
         }
 
         void backCameraButton_Click(object sender, EventArgs e)
         {
-            //selectedCamera = CameraSelection.Back;
-            //CrossCustomCamera.Current.CustomCameraView.Start(selectedCamera);
-            //_customCameraView.SelectedCamera = CameraSelection.Back;
             CrossCustomCamera.Current.CustomCameraView.SelectedCamera = CameraSelection.Back;
         }
 
         void frontCameraButton_Click(object sender, EventArgs e)
         {
-            //selectedCamera = CameraSelection.Front;
-            //CrossCustomCamera.Current.CustomCameraView.Start(selectedCamera);
-            //_customCameraView.SelectedCamera = CameraSelection.Front;
             CrossCustomCamera.Current.CustomCameraView.SelectedCamera = CameraSelection.Front;
         }
 
