@@ -10,7 +10,7 @@ nuget pack Plugin.ImageCrop.nuspec
 ```
 
 **Supports**
-* Xamarin.iOS (Unified) WORK IN PROGRESS
+* Xamarin.iOS (Unified)
 * Xamarin.Android
 
 ### Usage
