@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using UIKit;
+using System.Linq;
 
 namespace Plugin.CustomCamera
 {
@@ -14,8 +15,8 @@ namespace Plugin.CustomCamera
     {        
         #region ICustomCameraView interface implementation
 
-        //CameraOrientation _cameraOrientation = CameraOrientation.Automatic;
-        static CameraSelection _selectedCamera;
+        CameraOrientation _cameraOrientation = CameraOrientation.Automatic;
+        static CameraSelection _selectedCamera = CameraSelection.Back;
         Action<string> _callback;
 
         /// <summary>
@@ -29,8 +30,8 @@ namespace Plugin.CustomCamera
             }
             set
             {
-                if (value == _selectedCamera)
-                    return;
+                //if (value == _selectedCamera)
+                //    return;
 
                 _selectedCamera = value;
                 SetSelectedCamera(_selectedCamera);
@@ -40,7 +41,21 @@ namespace Plugin.CustomCamera
         /// <summary>
         /// The camera orientation
         /// </summary>
-        public CameraOrientation CameraOrientation {get; set;}
+        public CameraOrientation CameraOrientation
+        {
+            get
+            {
+                return _cameraOrientation;
+            }
+            set
+            {
+                if (_cameraOrientation == value)
+                    return;
+
+                _cameraOrientation = value;
+                SetCameraOrientation();
+            }
+        }
 
         /// <summary>
         /// Take a picture
@@ -56,8 +71,11 @@ namespace Plugin.CustomCamera
         /// Starts the camera
         /// </summary>
         /// <param name="selectedCamera">The selected camera, default: Back</param>
-        public void Start(CameraSelection selectedCamera = CameraSelection.Back)
+        public void Start(CameraSelection selectedCamera = CameraSelection.None)
         {
+            if (selectedCamera == CameraSelection.None)
+                selectedCamera = _selectedCamera;
+
             try
             {
                 SetupUserInterface();
@@ -88,54 +106,27 @@ namespace Plugin.CustomCamera
             SetPicture(false);
         }
         #endregion
-
+                
         AVCaptureSession _captureSession;
         AVCaptureDeviceInput _captureDeviceInput;
         AVCaptureStillImageOutput _stillImageOutput;
         UIView _liveCameraStream;
+        AVCaptureVideoPreviewLayer _videoPreviewLayer;
         bool _resetCamera = false;
-
+                
         void SetupUserInterface()
         {
-            var centerButtonX = this.Bounds.GetMidX() - 35f;
-            var topLeftX = Bounds.X + 25;
-            var topRightX = Bounds.Right - 65;
-            var bottomButtonY = Bounds.Bottom - 150;
-            var topButtonY = Bounds.Top + 15;
-
-            _liveCameraStream = new UIView() { Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height) };
-            
-            Add(_liveCameraStream);
-            //Add(_picture);
-            //Add(_takePictureButton);
-            //Add(_toggleCameraButton);
-            //Add(_toggleFlashButton);
+            if (_liveCameraStream == null)
+            {
+                _liveCameraStream = new UIView() { Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height) };
+                Add(_liveCameraStream);
+            }
+            else
+            {
+                _liveCameraStream.Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height);
+            }            
         }
-
-        void SetupEventHandlers()
-        {
-            //_takePictureButton.TouchUpInside += (object sender, EventArgs e) =>
-            //{
-            //    if (_resetCamera)
-            //    {
-            //        SetPicture(null);
-            //        return;
-            //    }
-            
-            //    TakePicture();
-            //};
-
-            //_toggleCameraButton.TouchUpInside += (object sender, EventArgs e) =>
-            //{
-            //    ToggleFrontBackCamera();
-            //};
-
-            //_toggleFlashButton.TouchUpInside += (object sender, EventArgs e) =>
-            //{
-            //    ToggleFlash();
-            //};
-        }
-
+                
         async void TakePicture()
         {
             if (_resetCamera)
@@ -183,7 +174,9 @@ namespace Plugin.CustomCamera
             if (selectedCamera.ToAVCaptureDevicePosition() == _captureDeviceInput.Device.Position)
                 return;
             
-            var device = GetCameraForOrientation(selectedCamera.ToAVCaptureDevicePosition());
+            var device = GetCamera(selectedCamera.ToAVCaptureDevicePosition());
+
+            
             ConfigureCameraForDevice(device);
 
             _captureSession.BeginConfiguration();
@@ -217,13 +210,13 @@ namespace Plugin.CustomCamera
             }
         }
 
-        AVCaptureDevice GetCameraForOrientation(AVCaptureDevicePosition orientation)
+        AVCaptureDevice GetCamera(AVCaptureDevicePosition position)
         {
             var devices = AVCaptureDevice.DevicesWithMediaType(AVMediaType.Video);
 
             foreach (var device in devices)
             {
-                if (device.Position == orientation)
+                if (device.Position == position)
                 {
                     return device;
                 }
@@ -232,53 +225,77 @@ namespace Plugin.CustomCamera
         }
 
         void SetupLiveCameraStream()
-        {
+        {            
             _captureSession = new AVCaptureSession();
 
             var viewLayer = _liveCameraStream.Layer;
-            var videoPreviewLayer = new AVCaptureVideoPreviewLayer(_captureSession)
+            _videoPreviewLayer = new AVCaptureVideoPreviewLayer(_captureSession)
             {
                 Frame = _liveCameraStream.Bounds
             };
-            _liveCameraStream.Layer.AddSublayer(videoPreviewLayer);
-
-            var captureDevice = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);
-            ConfigureCameraForDevice(captureDevice);
+            _liveCameraStream.Layer.AddSublayer(_videoPreviewLayer);
+            
+            var captureDevice = AVCaptureDevice.DefaultDeviceWithMediaType(AVMediaType.Video);            
+            ConfigureCameraForDevice(captureDevice);            
             _captureDeviceInput = AVCaptureDeviceInput.FromDevice(captureDevice);
-
-            var dictionary = new NSMutableDictionary();
-            dictionary[AVVideo.CodecKey] = new NSNumber((int)AVVideoCodec.JPEG);
+            
+            //var dictionary = new NSMutableDictionary();
+            //dictionary[AVVideo.CodecKey] = new NSNumber((int)AVVideoCodec.JPEG);
+                       
+            
             _stillImageOutput = new AVCaptureStillImageOutput()
             {
-                OutputSettings = new NSDictionary()
+                OutputSettings = new NSDictionary()                
             };
-
+            
             _captureSession.AddOutput(_stillImageOutput);
-            _captureSession.AddInput(_captureDeviceInput);
-            _captureSession.StartRunning();
+            _captureSession.AddInput(_captureDeviceInput); 
+            _captureSession.StartRunning();            
+        }
+
+        void LOG()
+        {
+            Console.WriteLine("Outputs: {0}", _captureSession.Outputs.Count());
+            Console.WriteLine("Connections: {0}", _stillImageOutput.Connections.Count());
+        }
+
+        // http://stackoverflow.com/questions/3561738/why-avcapturesession-output-a-wrong-orientation
+        void SetCameraOrientation()
+        {
+            //return;
+            var outputs = _captureSession.Outputs;
+            if (outputs.Any())
+            {
+                var output = outputs[0];
+                output.Connections[0].VideoOrientation = _cameraOrientation.ToAVCaptureVideoOrientation();
+                _videoPreviewLayer.Orientation = _cameraOrientation.ToAVCaptureVideoOrientation();
+
+                _videoPreviewLayer.Frame = new CGRect(0f, 0f, Bounds.Width, Bounds.Height);
+                _liveCameraStream.Frame = _videoPreviewLayer.Frame;                
+            }
         }
 
         void ConfigureCameraForDevice(AVCaptureDevice device)
         {
-            var error = new NSError();
-            if (device.IsFocusModeSupported(AVCaptureFocusMode.ContinuousAutoFocus))
-            {
-                device.LockForConfiguration(out error);
-                device.FocusMode = AVCaptureFocusMode.ContinuousAutoFocus;
-                device.UnlockForConfiguration();
-            }
-            else if (device.IsExposureModeSupported(AVCaptureExposureMode.ContinuousAutoExposure))
-            {
-                device.LockForConfiguration(out error);
-                device.ExposureMode = AVCaptureExposureMode.ContinuousAutoExposure;
-                device.UnlockForConfiguration();
-            }
-            else if (device.IsWhiteBalanceModeSupported(AVCaptureWhiteBalanceMode.ContinuousAutoWhiteBalance))
-            {
-                device.LockForConfiguration(out error);
-                device.WhiteBalanceMode = AVCaptureWhiteBalanceMode.ContinuousAutoWhiteBalance;
-                device.UnlockForConfiguration();
-            }
+            //var error = new NSError();
+            //if (device.IsFocusModeSupported(AVCaptureFocusMode.ContinuousAutoFocus))
+            //{
+            //    device.LockForConfiguration(out error);
+            //    device.FocusMode = AVCaptureFocusMode.ContinuousAutoFocus;
+            //    device.UnlockForConfiguration();
+            //}
+            //else if (device.IsExposureModeSupported(AVCaptureExposureMode.ContinuousAutoExposure))
+            //{
+            //    device.LockForConfiguration(out error);
+            //    device.ExposureMode = AVCaptureExposureMode.ContinuousAutoExposure;
+            //    device.UnlockForConfiguration();
+            //}
+            //else if (device.IsWhiteBalanceModeSupported(AVCaptureWhiteBalanceMode.ContinuousAutoWhiteBalance))
+            //{
+            //    device.LockForConfiguration(out error);
+            //    device.WhiteBalanceMode = AVCaptureWhiteBalanceMode.ContinuousAutoWhiteBalance;
+            //    device.UnlockForConfiguration();
+            //}
         }
 
         async void AuthorizeCameraUse()

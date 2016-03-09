@@ -16,8 +16,8 @@ namespace CustomCameraTest.Droid
     {
         ICustomCameraView _customCameraView;
         ImageView _imageView;
-        Button captureButton;
-        Button resetCameraButton;
+        //CameraSelection selectedCamera = CameraSelection.Front;
+
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -25,11 +25,13 @@ namespace CustomCameraTest.Droid
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             _customCameraView = FindViewById<CustomCameraView>(Resource.Id.customCameraView);
-            _customCameraView.Start(CameraSelection.Front);
+            
+            //selectedCamera = CrossCustomCamera.Current.CustomCameraView.SelectedCamera;
+            CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
 
             _imageView = FindViewById<ImageView>(Resource.Id.imageView);
 
-            captureButton = FindViewById<Button>(Resource.Id.captureButton);
+            var captureButton = FindViewById<Button>(Resource.Id.captureButton);
             captureButton.Click += captureButton_Click;
 
             var frontCameraButton = FindViewById<Button>(Resource.Id.frontCameraButton);
@@ -44,7 +46,7 @@ namespace CustomCameraTest.Droid
             //var rotateRightButton = FindViewById<Button>(Resource.Id.rotateRightButton);
             //rotateRightButton.Click += rotateRightButton_Click;
 
-            resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
+            var resetCameraButton = FindViewById<Button>(Resource.Id.resetCameraButton);
             resetCameraButton.Click += resetCameraButton_Click;
         }
 
@@ -54,58 +56,26 @@ namespace CustomCameraTest.Droid
             //_customCameraView.Reset();
         }
 
-        void rotateLeftButton_Click(object sender, EventArgs e)
-        {
-            switch (_customCameraView.CameraOrientation)
-            {
-                case CameraOrientation.Rotation0:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
-                    break;
-                case CameraOrientation.Rotation90:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
-                    break;
-                case CameraOrientation.Rotation180:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
-                    break;
-                case CameraOrientation.Rotation270:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
-                    break;
-            }
-        }
-
-        void rotateRightButton_Click(object sender, EventArgs e)
-        {
-            switch (_customCameraView.CameraOrientation)
-            {
-                case CameraOrientation.Rotation0:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
-                    break;
-                case CameraOrientation.Rotation90:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
-                    break;
-                case CameraOrientation.Rotation180:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
-                    break;
-                case CameraOrientation.Rotation270:
-                    _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
-                    break;
-            }
-        }
-
         void captureButton_Click(object sender, EventArgs e)
-        {
+        {            
             CrossCustomCamera.Current.CustomCameraView.TakePicture((path) => ProcessPicture(path));            
             //_customCameraView.TakePicture((path) => ProcessPicture(path));
         }
 
         void backCameraButton_Click(object sender, EventArgs e)
         {
-            _customCameraView.SelectedCamera = CameraSelection.Back;
+            //selectedCamera = CameraSelection.Back;
+            //CrossCustomCamera.Current.CustomCameraView.Start(selectedCamera);
+            //_customCameraView.SelectedCamera = CameraSelection.Back;
+            CrossCustomCamera.Current.CustomCameraView.SelectedCamera = CameraSelection.Back;
         }
 
         void frontCameraButton_Click(object sender, EventArgs e)
         {
-            _customCameraView.SelectedCamera = CameraSelection.Front;
+            //selectedCamera = CameraSelection.Front;
+            //CrossCustomCamera.Current.CustomCameraView.Start(selectedCamera);
+            //_customCameraView.SelectedCamera = CameraSelection.Front;
+            CrossCustomCamera.Current.CustomCameraView.SelectedCamera = CameraSelection.Front;
         }
 
         void ProcessPicture(string path)
@@ -113,6 +83,44 @@ namespace CustomCameraTest.Droid
             _imageView.SetImageURI(null);
             _imageView.SetImageURI(Android.Net.Uri.Parse(path));
         }
+
+        //void rotateLeftButton_Click(object sender, EventArgs e)
+        //{
+        //    switch (_customCameraView.CameraOrientation)
+        //    {
+        //        case CameraOrientation.Rotation0:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
+        //            break;
+        //        case CameraOrientation.Rotation90:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
+        //            break;
+        //        case CameraOrientation.Rotation180:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
+        //            break;
+        //        case CameraOrientation.Rotation270:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
+        //            break;
+        //    }
+        //}
+
+        //void rotateRightButton_Click(object sender, EventArgs e)
+        //{
+        //    switch (_customCameraView.CameraOrientation)
+        //    {
+        //        case CameraOrientation.Rotation0:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation90;
+        //            break;
+        //        case CameraOrientation.Rotation90:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation180;
+        //            break;
+        //        case CameraOrientation.Rotation180:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation270;
+        //            break;
+        //        case CameraOrientation.Rotation270:
+        //            _customCameraView.CameraOrientation = CameraOrientation.Rotation0;
+        //            break;
+        //    }
+        //}
     }
 }
 

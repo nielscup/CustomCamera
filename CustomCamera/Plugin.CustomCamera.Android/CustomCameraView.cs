@@ -124,9 +124,6 @@ namespace Plugin.CustomCamera
         /// <param name="selectedCamera">The selected camera, default: Back</param>
         public void Start(CameraSelection selectedCamera = CameraSelection.Back)
         {
-            //if (_cameraOrientation == CameraOrientation.None)
-            //    _cameraOrientation = orientation;
-
             _cameraOrientation = Abstractions.CameraOrientation.Automatic;
 
             if (_selectedCamera == CameraSelection.None)
@@ -135,7 +132,10 @@ namespace Plugin.CustomCamera
             _isCameraStarted = true;
 
             if (_surface != null)
+            {
                 OpenCamera(_selectedCamera);
+                SetTexture();
+            }
         }
 
         /// <summary>
@@ -247,7 +247,6 @@ namespace Plugin.CustomCamera
             Android.Hardware.Camera.Parameters p = _camera.GetParameters();
             
             p.PictureFormat = Android.Graphics.ImageFormatType.Jpeg;
-            //p.SetRotation(0);
             _camera.SetParameters(p);
             _camera.SetDisplayOrientation(correctedDisplayRotation);
 
@@ -447,8 +446,7 @@ namespace Plugin.CustomCamera
                     try
                     {
                         
-                        _camera = Camera.Open(camIdx);
-                        //var size = new Camera.Size(_camera, 300, 300);                                                
+                        _camera = Camera.Open(camIdx);                                               
                         _cameraHardwareRotation = _cameraInfo.Orientation;
                         
                         _selectedCamera = cameraSelection;
@@ -462,13 +460,6 @@ namespace Plugin.CustomCamera
                 }
             }
         }
-
-        //private void GetSize()
-        //{
-        //    var p = _camera.GetParameters();
-        //    p.PreviewSize
-        //    List<Size> sizes = camera_parameters.getSupportedPreviewSizes();
-        //}
 
         private void CloseCamera()
         {
