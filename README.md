@@ -30,6 +30,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 public override void ViewDidLoad()
 {
 	base.ViewDidLoad();
+	
 	((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = View.Frame;
 	Add((UIView)CrossCustomCamera.Current.CustomCameraView);
 	CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
