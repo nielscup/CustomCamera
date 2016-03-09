@@ -20,7 +20,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 **Android**
 ```
 <plugin.customcamera.android.CustomCameraView
-    	android:id="@+id/customCameraView"
+	android:id="@+id/customCameraView"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" />
 ```
@@ -29,7 +29,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 ```
 public override void ViewDidLoad()
 {
-    	base.ViewDidLoad();
+	base.ViewDidLoad();
 	((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = View.Frame;
 	Add((UIView)CrossCustomCamera.Current.CustomCameraView);
 	CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
