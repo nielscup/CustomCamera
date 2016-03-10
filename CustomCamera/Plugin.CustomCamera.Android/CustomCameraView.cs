@@ -16,7 +16,7 @@ using Android.Media;
 
 namespace Plugin.CustomCamera
 {
-    [Register("plugin.customcamera.android.CustomCameraView")]
+    [Register("Plugin.CustomCamera.CustomCameraView")]
     public class CustomCameraView :
         FrameLayout,
         ICustomCameraView,

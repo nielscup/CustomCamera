@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <plugin.customcamera.android.CustomCameraView
+    <Plugin.CustomCamera.CustomCameraView
         android:id="@+id/customCameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
