@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2653A6DF-952E-47F7-BF5B-78D77E0F2896}"
 	ProjectSection(SolutionItems) = preProject
 		Plugin.CustomCamera.nuspec = Plugin.CustomCamera.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCameraTest.iOS", "CustomCameraTest.iOS\CustomCameraTest.iOS.csproj", "{B9BF5E7D-285D-49C4-B625-14872EEE3EE6}"
