@@ -19,7 +19,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 
 **Android**
 ```
-<plugin.customcamera.android.CustomCameraView
+<Plugin.CustomCamera.CustomCameraView
 	android:id="@+id/customCameraView"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" />
@@ -49,4 +49,17 @@ CrossCustomCamera.Current.CustomCameraView.TakePicture((path) =>
 
 // Reset the camera:
 CrossCustomCamera.Current.CustomCameraView.Reset();
+```
+**MvvmCross**
+```
+// Add this code to your MvxAndroidSetup so MvvmCross can bind to the CustomCameraView
+protected override System.Collections.Generic.IList<System.Reflection.Assembly> AndroidViewAssemblies 
+{
+    get 
+    {
+	    var assemblies = base.AndroidViewAssemblies;
+	    assemblies.Add(typeof(Plugin.CustomCamera.CustomCameraView).Assembly);
+	    return assemblies;
+    }
+}
 ```
