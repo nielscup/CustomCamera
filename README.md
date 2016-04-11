@@ -24,6 +24,12 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" />
 ```
+Add the following permissions:
+```
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
 
 **iOS**
 ```
