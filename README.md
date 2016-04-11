@@ -19,7 +19,7 @@ Use the CustomCameraView in your Android or iOS Project. See the test project fo
 
 **Android**
 
-In your layout(.axml):
+In your layout:
 ```
 <Plugin.CustomCamera.CustomCameraView
 	android:id="@+id/customCameraView"
