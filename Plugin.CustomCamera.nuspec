@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
     <id>Plugin.CustomCamera</id>
-    <version>0.0.17</version>
+    <version>0.0.18</version>
     <title>CustomCamera Plugin</title>
     <authors>Niels Cup</authors>
     <owners>Niels Cup</owners>
@@ -22,9 +22,9 @@
   <files>
 
     <!--Core-->
-    <file src="CustomCamera/Plugin.CustomCamera/bin/Release/Plugin.CustomCamera.dll" target="lib\portable-net45+win+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\Plugin.CustomCamera.dll" />
-    <file src="CustomCamera/Plugin.CustomCamera/bin/Release/Plugin.CustomCamera.Abstractions.dll" target="lib\portable-net45+win+wpa81+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\Plugin.CustomCamera.Abstractions.dll" />
-                                                                                        
+    <file src="CustomCamera/Plugin.CustomCamera/bin/Release/Plugin.CustomCamera.dll" target="lib\portable-net45+win+wp80+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\Plugin.CustomCamera.dll" />
+    <file src="CustomCamera/Plugin.CustomCamera/bin/Release/Plugin.CustomCamera.Abstractions.dll" target="lib\portable-net45+win+wp80+MonoTouch10+MonoAndroid10+xamarinmac20+xamarinios10\Plugin.CustomCamera.Abstractions.dll" />
+
     <!--Xamarin.Android-->
     <file src="CustomCamera/Plugin.CustomCamera.Android/bin/Release/Plugin.CustomCamera.Abstractions.dll" target="lib\MonoAndroid10\Plugin.CustomCamera.Abstractions.dll" />
     <file src="CustomCamera/Plugin.CustomCamera.Android/bin/Release/Plugin.CustomCamera.dll" target="lib\MonoAndroid10\Plugin.CustomCamera.dll" />
