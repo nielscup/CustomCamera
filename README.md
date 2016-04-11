@@ -31,7 +31,7 @@ public override void ViewDidLoad()
 {
 	base.ViewDidLoad();
 	
-	((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = View.Frame;
+	((UIView)CrossCustomCamera.Current.CustomCameraView).Frame = UIScreen.MainScreen.Bounds;
 	Add((UIView)CrossCustomCamera.Current.CustomCameraView);
 	CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
 }
