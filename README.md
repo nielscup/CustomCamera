@@ -31,6 +31,18 @@ Add the following permissions:
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
+```  
+protected override void OnCreate(Bundle bundle)
+{
+    base.OnCreate(bundle);
+
+    // Set our view from the "main" layout resource
+    SetContentView(Resource.Layout.Main);
+
+    CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
+}
+```
+
 **iOS**
 ```
 public override void ViewDidLoad()
