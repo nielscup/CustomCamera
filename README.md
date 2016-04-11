@@ -18,6 +18,7 @@ nuget pack Plugin.CustomCamera.nuspec
 Use the CustomCameraView in your Android or iOS Project. See the test project for a working example.
 
 **Android**
+
 In your layout(.axml):
 ```
 <Plugin.CustomCamera.CustomCameraView
