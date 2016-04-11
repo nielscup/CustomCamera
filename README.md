@@ -18,19 +18,14 @@ nuget pack Plugin.CustomCamera.nuspec
 Use the CustomCameraView in your Android or iOS Project. See the test project for a working example.
 
 **Android**
+In your layout(.axml):
 ```
 <Plugin.CustomCamera.CustomCameraView
 	android:id="@+id/customCameraView"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent" />
 ```
-Add the following permissions:
-```
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-```
-
+In your activity:
 ```  
 protected override void OnCreate(Bundle bundle)
 {
@@ -41,6 +36,12 @@ protected override void OnCreate(Bundle bundle)
 
     CrossCustomCamera.Current.CustomCameraView.Start(CameraSelection.Front);
 }
+```
+In your AndroidManifest.xml:
+```
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 **iOS**
