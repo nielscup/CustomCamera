@@ -6,7 +6,7 @@ Custom Camera for Xamarin.iOS and Xamarin.Android. This plugin will let you add 
 * Coming soon to NuGet
 * Or run the following command to create a nuget package yourself:
 ```
-nuget pack Plugin.ImageCrop.nuspec
+nuget pack Plugin.CustomCamera.nuspec
 ```
 
 **Supports**
