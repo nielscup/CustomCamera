@@ -171,7 +171,7 @@ namespace Plugin.CustomCamera
                 try
                 {
                     var path = dataDir + "/" + pictureName;
-                    //SaveFile(path, data);
+                    SaveFile(path, data);
                     RotateBitmap(path, data);
                     Callback(path);
                 }
